@@ -1,0 +1,10 @@
+version: '3.3'
+
+services:
+  eori:
+    container_name: eori
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    volumes:
+      - ./:/var/www/html:cached
