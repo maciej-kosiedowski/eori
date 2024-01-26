@@ -18,6 +18,7 @@ class EoriValidatorService implements EoriValidator
      */
     public function validate(string $eoriNumber): bool
     {
+        $this->eoriValidator->setStrict(env('EORI_VALIDATION_STRICT_MODE', false));
         return $this->eoriValidator->validate($eoriNumber);
     }
 }
