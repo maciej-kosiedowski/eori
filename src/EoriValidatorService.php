@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Slimad\Eori;
 
-use Davidvandertuijn\Eori\Validator;
 use Exception;
+use Slimad\Eori\Eori\Validator;
 
 class EoriValidatorService implements EoriValidator
 {

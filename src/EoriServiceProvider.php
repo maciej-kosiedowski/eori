@@ -2,10 +2,10 @@
 
 namespace Slimad\Eori;
 
-use Davidvandertuijn\Eori\Validator as EoriValidatorClient;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
+use Slimad\Eori\Eori\Validator as EoriValidatorClient;
 use Slimad\Eori\Rules\Eori;
 
 class EoriServiceProvider extends ServiceProvider

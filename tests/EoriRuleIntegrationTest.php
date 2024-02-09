@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Davidvandertuijn\Eori\Validator;
 use PHPUnit\Framework\TestCase;
+use Slimad\Eori\Eori\Validator;
 use Slimad\Eori\EoriValidatorService;
 use Slimad\Eori\Rules\Eori;
 
