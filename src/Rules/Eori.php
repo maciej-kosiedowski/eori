@@ -4,26 +4,18 @@ declare(strict_types=1);
 
 namespace Slimad\Eori\Rules;
 
-use Exception;
-use Illuminate\Contracts\Validation\Rule;
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Slimad\Eori\EoriValidator;
 
-class Eori implements Rule
+class Eori implements ValidationRule
 {
-    public function __construct(private readonly EoriValidator $validator)
-    {
-    }
+    public function __construct(private readonly EoriValidator $validator) {}
 
-    /**
-     * @throws Exception
-     */
-    public function passes($attribute, $value): bool
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        return $this->validator->validate($value);
-    }
-
-    public function message(): string
-    {
-        return 'The :attribute must be a valid Eori number.';
+        if (! $this->validator->validate($value)) {
+            $fail(__('The :attribute must be a valid Eori number.'));
+        }
     }
 }

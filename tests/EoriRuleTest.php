@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Slimad\Tests;
 
+use Exception;
 use Mockery\MockInterface;
-use PHPUnit\Framework\TestCase;
 use Slimad\Eori\EoriValidator;
 use Slimad\Eori\Rules\Eori;
 
-class EoriRuleTest extends TestCase
+class EoriRuleTest extends EoriTestCase
 {
     private Eori $rule;
 
@@ -22,21 +22,21 @@ class EoriRuleTest extends TestCase
         $this->rule = new Eori($this->eoriValidator);
     }
 
-    public function testSuccesEoriNumber(): void
+    public function testSuccessEoriNumber(): void
     {
         $this->eoriValidator->shouldReceive('validate')->with('PL847146028300000')->andReturn(true)->once();
-        self::assertTrue($this->rule->passes('vat_number', 'PL847146028300000'));
+        $this->rule->validate('vat_number', 'PL847146028300000', function (): never {
+            $this->fail('Validation should not fail');
+        });
     }
 
     public function testInvalidEoriNumber(): void
     {
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('The :attribute must be a valid Eori number.');
         $this->eoriValidator->shouldReceive('validate')->with('PLInvalid')->andReturn(false)->once();
-        self::assertFalse($this->rule->passes('vat_number', 'PLInvalid'));
-    }
-
-    public function testSuccessVatNumberMessage(): void
-    {
-        $this->eoriValidator->shouldReceive('validate')->with('PLInvalid')->andReturn(false)->once();
-        self::assertStringContainsString('The :attribute must be a valid Eori number.', $this->rule->message());
+        $this->rule->validate('vat_number', 'PLInvalid', static function ($message): never {
+            throw new Exception($message);
+        });
     }
 }

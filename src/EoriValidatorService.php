@@ -9,16 +9,15 @@ use Slimad\Eori\Eori\Validator;
 
 class EoriValidatorService implements EoriValidator
 {
-    public function __construct(private readonly Validator $eoriValidator)
-    {
-    }
+    public function __construct(private readonly Validator $eoriValidator) {}
 
     /**
      * @throws Exception
      */
     public function validate(string $eoriNumber): bool
     {
-        $this->eoriValidator->setStrict(env('EORI_VALIDATION_STRICT_MODE', false));
+
+        $this->eoriValidator->setStrict(config('eori.strict_mode', false));
 
         return $this->eoriValidator->validate($eoriNumber);
     }

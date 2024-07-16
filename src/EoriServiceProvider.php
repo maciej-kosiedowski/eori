@@ -21,8 +21,10 @@ class EoriServiceProvider extends ServiceProvider
          * Register the "eori" validation rule.
          */
         Validator::extend('eori', function ($attribute, $value, $parameters, $validator) {
-            return (new Eori($this->app->get(EoriValidator::class)))->passes($attribute, $value);
-        }, (new Eori($this->app->get(EoriValidator::class)))->message());
+            $rule = new Eori($this->app->get(EoriValidator::class));
+            $rule->validate($attribute, $value, static fn (?string $message = null) => null);
+
+        });
     }
 
     /**
@@ -30,6 +32,10 @@ class EoriServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/eori.php', 'eori'
+        );
+
         $this->app->singleton(EoriValidatorService::class, function (Container $app) {
             return new EoriValidatorService(new EoriValidatorClient());
         });

@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
+namespace Slimad\Tests;
+
+use Exception;
 use Slimad\Eori\Eori\Validator;
 use Slimad\Eori\EoriValidatorService;
 use Slimad\Eori\Rules\Eori;
 
-class EoriRuleIntegrationTest extends TestCase
+class EoriRuleIntegrationTest extends EoriTestCase
 {
     private Eori $rule;
 
@@ -17,13 +19,19 @@ class EoriRuleIntegrationTest extends TestCase
         $this->rule = new Eori(new EoriValidatorService(new Validator()));
     }
 
-    public function testIntegrationSuccesEoriNumber(): void
+    public function testIntegrationSuccessEoriNumber(): void
     {
-        self::assertTrue($this->rule->passes('vat_number', 'PL847146028300000'));
+        $this->rule->validate('vat_number', 'PL847146028300000', function (): never {
+            $this->fail('Validation should not fail');
+        });
+        $this->assertTrue(true);
     }
 
     public function testIntegrationInvalidEoriNumber(): void
     {
-        self::assertFalse($this->rule->passes('vat_number', 'PLInvalid'));
+        $this->expectException(Exception::class);
+        $this->rule->validate('vat_number', 'PLInvalid', static function ($message): never {
+            throw new Exception($message);
+        });
     }
 }
