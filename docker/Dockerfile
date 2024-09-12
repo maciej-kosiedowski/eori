@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.0-experimental
 
-FROM php:8.1-fpm-alpine3.16
+FROM php:8.2-fpm-alpine3.16
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 

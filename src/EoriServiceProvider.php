@@ -10,26 +10,18 @@ use Slimad\Eori\Rules\Eori;
 
 class EoriServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap the application services.
-     */
     public function boot(): void
     {
         $this->app->bind(EoriValidator::class, EoriValidatorService::class);
 
-        /**
-         * Register the "eori" validation rule.
-         */
-        Validator::extend('eori', function ($attribute, $value, $parameters, $validator) {
+        Validator::extend('eori', function ($attribute, $value, $parameters, $validator): bool {
             $rule = new Eori($this->app->get(EoriValidator::class));
-            $rule->validate($attribute, $value, static fn (?string $message = null) => null);
+            $rule->validate($attribute, $value, static fn (?string $message = null): null => null);
 
+            return $rule->passes();
         });
     }
 
-    /**
-     * Register the application services.
-     */
     public function register(): void
     {
         $this->mergeConfigFrom(
